@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+</head>
+<body>
+
+
+    <div class="clock">
+      <div class="clock-face">
+        <div class="hand hour-hand"></div>
+        <div class="hand min-hand"></div>
+        <div class="hand second-hand"></div>
+      </div>
+    </div>
+
+
+  <style>
+    html {
+      background:#018DED url(http://unsplash.it/1500/1000?image=881&blur=50);
+      background-size:cover;
+      font-family:'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display:flex;
+      flex:1;
+      min-height: 100vh;
+      align-items: center;
+    }
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      border:20px solid white;
+      border-radius:50%;
+      margin:50px auto;
+      position: relative;
+      padding:2rem;
+      box-shadow:
+        0 0 0 4px rgba(0,0,0,0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px black,
+        0 0 10px rgba(0,0,0,0.2);
+    }
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px); /* account for the height of the clock hands */
+    }
+    .hand {
+      width:50%;
+      height:6px;
+      background:black;
+      position: absolute;
+      top:50%;
+      transform: rotate(90deg);
+      transform-origin: 100%;
+      transition: all 0.5s;
+      transition-timing-function: cubic-bezier(0.1, 2.5, 0.6, 1);
+    }
+    .hour-hand {
+      width: 35%;
+      left: 15%;
+    }
+    .second-hand {
+      height: 2px;
+      border: 1px solid white;
+      background: green;
+    }
+
+  </style>
+
+  <script> 
+    function initClock(){
+      updateHour();
+      updateMinute();
+      updateSecond();
+    }
+    function updateHour(){
+      var currentHours = curTime.getHours();
+      currentHours %= 12;
+      var hourHandDeg = ((currentHours/12)*360)+90;
+      //hourHandDeg %= 360;
+      hoursHand.style.transform = "rotate(" + hourHandDeg + "deg)";
+    }
+    function updateMinute(){
+      const currentMinutes = curTime.getMinutes();
+      var minHandDeg = ((currentMinutes/60)*360)+90;
+      //minHandDeg %= 360;
+      minutesHand.style.transform = "rotate(" + minHandDeg + "deg)";
+      if (currentMinutes === 0){
+          updateHour();
+      }
+    }    
+    function updateSecond(){  
+      curTime = new Date();
+     // secondsHand.style.transition = "all 0.5s";
+    //  secondsHand.style.transitionTimingFunction: "cubic-bezier(0.1, 2.5, 0.6, 1)";
+      const currentSeconds = curTime.getSeconds();
+      var secHandDeg = ((currentSeconds/60)*360)+90;
+      //secHandDeg %= 360;
+      if (currentSeconds === 0){
+      //  secondsHand.style.transition = "none";
+        updateMinute();
+      }
+      secondsHand.style.transform = "rotate(" + secHandDeg + "deg)";
+      
+    }
+    var curTime = new Date();
+    secondsHand = document.querySelector('.second-hand');
+    minutesHand = document.querySelector('.min-hand');
+    hoursHand = document.querySelector('.hour-hand');
+    initClock();
+    setInterval(updateSecond, 500);    
+  </script>
+</body>
+</html>
